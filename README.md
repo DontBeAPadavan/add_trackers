@@ -1,6 +1,6 @@
 # Get more trackers
 
-See no peers for some torrent? Add more trackers from torrentz.eu.
+See no peers for some torrent(s)? Add more tracker(s) from torrentz.eu.
 
 ## Installation
 
@@ -14,7 +14,7 @@ opkg install transmission-remote-openssl
 * Download script and make it executable:
 
 ```
-wget --no-check-certificate -O /opt/bin/add_trackers.sh https://raw.githubusercontent.com/DontBeAPadavan/add_trackers/master/opt/bin/add_trackers.sh
+wget --no-check-certificate -O /opt/bin/add_trackers.sh https://raw.githubusercontent.com/DontBeAPadavan/add_trackers/master/add_trackers.sh
 chmod +x /opt/bin/add_trackers.sh
 ```
 
@@ -23,7 +23,7 @@ chmod +x /opt/bin/add_trackers.sh
 Run script to add some more trackers for active torrents:
 
 ```
-add_trackers.sh
+/opt/home/admin # add_trackers.sh
 Processing ID #56...
 No additional trackers found, sorry.
 Processing ID #77...
