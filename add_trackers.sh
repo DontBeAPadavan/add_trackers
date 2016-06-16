@@ -31,7 +31,7 @@ add_trackers () {
 ids="$(transmission-remote --auth=$auth --list | grep -vE 'Seeding|Stopped' | grep '^ ' | awk '{ print $1 }')"
 
 for id in $ids ; do
-    echo "Processing ID #$id..."
+    echo "Processing torrent #$id..."
     hash="$(transmission-remote --auth=$auth  --torrent $id --info | grep '^  Hash: ' | awk '{ print $2 }')"
     add_trackers $hash
 done
