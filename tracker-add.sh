@@ -1,23 +1,37 @@
-#!/bin/bash
+#!/bin/sh
 
-torrent_hash=$1
-base_url='http://torrentz.eu'
-pattern='announcelist_[0-9]+'
+# Get transmission credentials
+auth=$(nvram get http_username):$(nvram get http_passwd)
 
-if [ -z "$1" ] ; then
-    echo 'Usage: ./tracker-add.sh <hash>'
-    exit 1
-fi
+add_trackers () {
+    torrent_hash=$1
+    base_url='http://torrentz.eu'
+    pattern='announcelist_[0-9]+'
 
-announce_list=`curl -s ${base_url}/${torrent_hash} | grep -Eo "${pattern}"`
+    announce_list=`wget -qO - ${base_url}/${torrent_hash} | grep -Eo "${pattern}"`
 
-if [ -z "$announce_list" ] ; then
-    echo 'No additional trackers found, sorry.'
-    exit 1
-fi
+    if [ -z "$announce_list" ] ; then
+        echo 'No additional trackers found, sorry.'
+        continue
+    fi
 
-for tracker in $(curl -s ${base_url}/${announce_list})
-do
-  echo "Adding ${tracker} to torrent ${torrent_hash}"
-  transmission-remote -t ${torrent_hash} -td ${tracker}
+    echo "adding trackers for $torrent_hash..."
+
+    for tracker in $(wget -qO - ${base_url}/${announce_list}) ; do
+        echo -n "* ${tracker}..."
+        if [ -z "$(transmission-remote  --auth=$auth --torrent ${torrent_hash} -td ${tracker} | grep 'success')" ]; then
+            echo ' failed.'
+        else
+            echo ' done.'
+        fi
+    done
+}
+
+# Get list of active torrents
+ids="$(transmission-remote --auth=$auth --list | grep -vE 'Seeding|Stopped' | grep '^ ' | awk '{ print $1 }')"
+
+for id in $ids ; do
+    echo "Processing ID #$id..."
+    hash="$(transmission-remote --auth=$auth  --torrent $id --info | grep '^  Hash: ' | awk '{ print $2 }')"
+    add_trackers $hash
 done
