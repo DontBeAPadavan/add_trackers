@@ -5,7 +5,7 @@ auth=$(nvram get http_username):$(nvram get http_passwd)
 
 add_trackers () {
     torrent_hash=$1
-    base_url='http://torrentz.eu'
+    base_url='http://torrentz2.eu'
     pattern='announcelist_[0-9]+'
 
     announce_list=`wget -qO - ${base_url}/${torrent_hash} | grep -Eo "${pattern}"`
