@@ -5,10 +5,10 @@ auth=$(nvram get http_username):$(nvram get http_passwd)
 
 add_trackers () {
     torrent_hash=$1
-    base_url='http://torrentz2.eu'
+    base_url='https://torrentz2.eu'
     pattern='announcelist_[0-9]+'
 
-    announce_list=`wget -qO - ${base_url}/${torrent_hash} | grep -Eo "${pattern}"`
+    announce_list=`wget --no-check-certificate -qO - ${base_url}/${torrent_hash} | grep -Eo "${pattern}"`
 
     if [ -z "$announce_list" ] ; then
         echo 'No additional trackers found, sorry.'
