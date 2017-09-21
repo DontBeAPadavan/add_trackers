@@ -18,7 +18,7 @@ add_trackers () {
     echo "adding trackers for $torrent_hash..."
 
     for tracker in $(wget -qO - "${base_url}"/"${announce_list}") ; do
-        printf "* %s\\n" "${tracker}..."
+        echo -n "* ${tracker}..."
         if transmission-remote  --auth="$auth" --torrent "${torrent_hash}" -td "${tracker}" | grep -q 'success'; then
             echo ' failed.'
         else
